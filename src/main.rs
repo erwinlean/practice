@@ -126,6 +126,17 @@ fn main (){
     // Bucles
     for_while_loop();
     
+    // Errors/Warnings
+    errors();
+
+    // Match
+    errors_and_match();
+
+    // unwrap expect, assert
+    unwrap_expect_asserts_usage();
+
+    // Exercise six
+    options_ausence();
 }
 
 // Funcion create example
@@ -305,7 +316,7 @@ fn hash_map(){
     println!("{:?}", reviews.get("testing")); 
 }
 
-// Exercise four
+// Exercise four & five
 fn exercise_four_and_five(){
     #[derive(PartialEq, Debug)]
     struct Car { color: String, motor: Transmission, roof: bool, age: (Age, u32) }
@@ -431,3 +442,95 @@ fn for_while_loop(){
     }
 }
 
+// Errors
+fn errors(){
+    let fruits = vec!["banana", "apple", "coconut", "orange", "strawberry"];
+
+    let first = fruits.get(0);
+    println!("{:?}", first);
+    let third = fruits.get(2);
+    println!("{:?}", third);
+    
+    // pick the 99th item, which is non-existent:
+    let non_existent = fruits.get(99);
+    println!("{:?}", non_existent);
+}
+
+// Match
+fn errors_and_match(){
+    let fruits = vec!["banana", "apple", "coconut", "orange", "strawberry"];
+    for &index in [0, 2, 99].iter() {
+        match fruits.get(index) { // match serch for the index we call (this case with error for the 99)
+            Some(fruit_name) => println!("It's a delicious {}!", fruit_name),
+            None => println!("There is no fruit! :("),
+        }
+    }
+
+    // En este caso, nos gustaría ignorar la variante None y todos los valores de Some<u8> que no coincidan con Some(7)
+    let a_number: Option<u8> = Some(7);
+    match a_number { // like an if?
+        Some(7) => println!("That's my lucky number!"),
+        _ => {},
+    }
+    // same as
+    let a_number: Option<u8> = Some(7);
+    if let Some(7) = a_number {
+        println!("That's my lucky number!");
+    }
+}
+
+// Unwrap, expect and assert_eq
+// assert_eq means: Asserts that two expressions are equal to each other (using PartialEq)
+fn unwrap_expect_asserts_usage(){
+    let gift = Some("candy");
+    assert_eq!(gift.unwrap(), "candy");
+    
+    //let empty_gift: Option<&str> = None;
+    //assert_eq!(empty_gift.unwrap(), "candy");
+
+    assert_eq!(Some("dog").unwrap_or("cat"), "dog");
+    assert_eq!(None.unwrap_or("cat"), "cat");
+}
+
+// Exercise six > todo ! domani
+fn options_ausence(){
+    struct Person {
+        first: String,
+        middle: Option<String>,
+        last: String,
+    }
+    
+    fn build_full_name(person: &Person) -> String {
+        let mut full_name = String::new();
+        full_name.push_str(&person.first);
+        full_name.push_str(" ");
+    
+        // TODO: Implement the part of this function that handles the person's middle name.
+    
+        full_name.push_str(&person.last);
+        full_name
+    }
+    
+    fn main() {
+        let john = Person {
+            first: String::from("James"),
+            middle: Some(String::from("Oliver")),
+            last: String::from("Smith"),
+        };
+        assert_eq!(build_full_name(&john), "James Oliver Smith");
+    
+        let alice = Person {
+            first: String::from("Alice"),
+            middle: None,
+            last: String::from("Stevens"),
+        };
+        assert_eq!(build_full_name(&alice), "Alice Stevens");
+    
+        let bob = Person {
+            first: String::from("Robert"),
+            middle: Some(String::from("Murdock")),
+            last: String::from("Jones"),
+        };
+        assert_eq!(build_full_name(&bob), "Robert Murdock Jones");
+    }
+}
