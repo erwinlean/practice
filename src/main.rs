@@ -83,7 +83,7 @@ fn main (){
     let num = 25;
     println!("{} divided by 5 = {}", num, divide_by_5(num));
 
-    // Exercise
+    // Exercise one
     #[derive(Debug)]
     struct Car {
         color: String,
@@ -110,12 +110,30 @@ fn main (){
 
     // Vectors
     vectors();
+
+    // Exercise
+    exercise_two();
+
+    // Exercise
+    exercise_three();
+
+    // Hash map
+    hash_map();
+
+    // Exercise
+    exercise_four_and_five();
+
+    // Bucles
+    for_while_loop();
+    
 }
 
+// Funcion create example
 fn divide_by_5(num: u32) -> u32 {
     num / 5
 }
 
+// Matrix usage
 fn matrix_uses(){
     // contains the same type and never changes the lenght cant change
     let matrix: [&str; 4] = ["uno", "dos", "tres", "a"];
@@ -125,6 +143,7 @@ fn matrix_uses(){
     println!("other matrix: {}", matrix2[0]);
 }
 
+// Vectors usage
 fn vectors(){
     // Vector only contain one type, the lenght can change.
     // Declare vector, initialize with three values
@@ -146,9 +165,6 @@ fn vectors(){
     let three: i32 = index_vec[1];
     println!("Vector: {:?}, three = {}", index_vec, three);
 
-    // Exercise
-    exercise_two();
-
     // if condition example
     let num: i32 = 500; // num variable can be set at some point in the program
     let out_of_range: bool;
@@ -162,9 +178,6 @@ fn vectors(){
         out_of_range = false;
     }
     println!("Range: {}", out_of_range);
-
-    // Exercise
-    exercise_three();
 }
 
 // Exercise
@@ -192,6 +205,7 @@ fn exercise_two(){
     println!("the car {:#?}", car)
 }
 
+// Exercise three
 fn exercise_three() {
     #[derive(PartialEq, Debug)]
     struct Car {
@@ -260,3 +274,160 @@ fn exercise_three() {
 
     car_main();
 }
+
+// Mapas hash, can be mutate
+use std::collections::HashMap; // call the library for hash maps
+fn hash_map(){
+    let mut reviews: HashMap<String, String> = HashMap::new(); // create the hashmap from the library  indicates is mutate
+
+    // Inser value to the hash map
+    // K: represents key, v: value.
+    reviews.insert(String::from("Ancient Roman History"), String::from("Very accurate."));
+    reviews.insert(String::from("Cooking with Rhubarb"), String::from("Sweet recipes."));
+    reviews.insert(String::from("Programming in Rust"), String::from("Great examples."));
+    reviews.insert(String::from("testing"), String::from("Test."));
+
+    // Access to the hash map
+    let book: &str = "Programming in Rust";
+    println!("\nReview for \'{}\': {:?}", book, reviews.get(book));
+    // test access
+    println!("{:?}", reviews.get("testing")); // call hashmap and get, with the key for obtein the value
+
+    // Deleting
+    // Remove book review
+    let obsolete: &str = "Ancient Roman History";
+    println!("\n'{}\' removed.", obsolete);
+    reviews.remove(obsolete);
+    reviews.remove("testing");
+
+    // Confirm book review removed
+    println!("\nReview for \'{}\': {:?}", obsolete, reviews.get(obsolete));
+    println!("{:?}", reviews.get("testing")); 
+}
+
+// Exercise four
+fn exercise_four_and_five(){
+    #[derive(PartialEq, Debug)]
+    struct Car { color: String, motor: Transmission, roof: bool, age: (Age, u32) }
+
+    #[derive(PartialEq, Debug)]
+    enum Transmission { Manual, SemiAuto, Automatic }
+
+    #[derive(PartialEq, Debug)]
+    enum Age { New, Used }
+
+    // Get the car quality by testing the value of the input argument
+    // - miles (u32)
+    // Return tuple with car age ("New" or "Used") and mileage
+    fn car_quality (miles: u32) -> (Age, u32) {
+
+        // Check if car has accumulated miles
+        // Return tuple early for Used car
+        if miles > 0 {
+            return (Age::Used, miles);
+        }
+
+        // Return tuple for New car, no need for "return" keyword or semicolon
+        (Age::New, miles)
+    }
+
+    // Build "Car" using input arguments
+    fn car_factory(order: i32, miles: u32) -> Car {
+        let mut colors = vec!["Blue", "Green", "Red", "Silver"];
+
+        // Prevent panic: Check color index for colors array, reset as needed
+        // Valid color = 1, 2, 3, or 4
+        // If color > 4, reduce color to valid index
+        {
+            let mut color = order as usize;
+            colors.push("caca");
+            if color >= colors.len(){
+                color = color % colors.len();
+                print!("color: {}", color);
+            }
+        }
+        // Add variety to orders for motor type and roof type
+        let mut motor = Transmission::Manual;
+        let mut roof: bool = true;
+        if order % 3 == 0 {          // 3, 6, 9
+            motor = Transmission::Automatic;
+        } else if order % 2 == 0 {   // 2, 4, 8, 10
+            motor = Transmission::SemiAuto;
+            roof = false;
+        }                            // 1, 5, 7, 11
+
+        // Return requested "Car"
+        let color_index = (order % colors.len() as i32).abs() as usize;
+        Car {
+            color: String::from(colors[color_index]),
+            motor: motor,
+            roof: roof,
+            age: car_quality(miles)
+        }
+    }
+
+    fn main_car() {
+        let mut orders: HashMap<i32, Car > = HashMap::new();
+
+        // Exercise four deleted
+        // Initialize counter variable
+        let mut miles = 0;
+        let mut car: Car;
+        
+        for order in 1..=5{ // Hardcodeado numero de iteraciones?
+            // Notes: for can "create" the variable in this case order himself doesnt need to create
+    
+            car = car_factory(order, miles);
+            orders.insert(order, car);
+
+            // Reset miles for order variety
+            if miles == 2100 {
+                miles = 0;
+            } else {
+                miles = miles + 700;
+            }
+        }
+
+        for (order, car) in orders.iter() {
+            println!("Car order {}: {:?}", order, car);
+        }
+
+    }
+
+    //reviews.insert(String::from("testing"), String::from("Test."));
+    main_car()
+}
+
+// Iteraccions examples
+fn for_while_loop(){
+
+    // Loop until "break;"
+    loop {
+        println!("We loop forever!");
+        break;
+    }
+    let mut counter :i32 = 1;
+    let stop_loop: i32 = loop {
+        counter *= 2;
+        if counter > 100 {
+            // Stop loop, return counter value
+            break counter;
+        }
+    };
+    // Loop should break when counter = 128
+    println!("Break {}.", stop_loop);
+
+    // While
+    let mut counter_1: i32 = 0;
+    while counter_1 < 5 {
+        println!("We loop a while...");
+        counter_1 = counter_1 + 1;
+    }
+
+    // For
+    let big_birds: [&str; 3] = ["ostrich", "peacock", "stork"];
+    for bird in big_birds.iter() {
+        println!("The {} is a big bird.", bird);
+    }
+}
+
