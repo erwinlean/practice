@@ -492,7 +492,7 @@ fn unwrap_expect_asserts_usage(){
     assert_eq!(None.unwrap_or("cat"), "cat");
 }
 
-// Exercise six > todo ! domani
+// Exercise six > todo
 fn options_ausence(){
     struct Person {
         first: String,
@@ -506,6 +506,10 @@ fn options_ausence(){
         full_name.push_str(" ");
     
         // TODO: Implement the part of this function that handles the person's middle name.
+        if let Some(middle_name) = &person.middle {
+            full_name.push_str(middle_name);
+            full_name.push_str(" ");
+        }
     
         full_name.push_str(&person.last);
         full_name
@@ -532,5 +536,11 @@ fn options_ausence(){
             last: String::from("Jones"),
         };
         assert_eq!(build_full_name(&bob), "Robert Murdock Jones");
+
+        println!("{:?} - {:?}", build_full_name(&bob), build_full_name(&alice));
     }
+
+    main();
 }
+
+// Enought to much spaghetti here to practice
